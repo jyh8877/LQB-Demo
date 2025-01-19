@@ -5,6 +5,7 @@
 ".\Objects\ds1302.obj",
 ".\Objects\onewire.obj",
 ".\Objects\iic.obj",
+".\Objects\uart.obj",
 ".\Objects\STARTUP.obj",
 ".\Objects\main.obj" 
 TO ".\Objects\Project" 

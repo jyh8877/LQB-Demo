@@ -1,10 +1,10 @@
-C51 COMPILER V9.59.0.0   LED                                                               01/19/2025 15:43:01 PAGE 1   
+C51 COMPILER V9.59.0.0   LED                                                               01/19/2025 16:26:55 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LED
 OBJECT MODULE PLACED IN .\Objects\Led.obj
-COMPILER INVOKED BY: E:\C51\C51\BIN\C51.EXE Hardware\Led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Hardware;.\User) DEBUG OBJE
-                    -CTEXTEND PRINT(.\Listings\Led.lst) OBJECT(.\Objects\Led.obj)
+COMPILER INVOKED BY: E:\C51\C51\BIN\C51.EXE Hardware\Led.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Hardware;.\User) DEBU
+                    -G OBJECTEXTEND PRINT(.\Listings\Led.lst) OBJECT(.\Objects\Led.obj)
 
 line level    source
 
@@ -34,11 +34,11 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    122    ----
+   CODE SIZE        =    125    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =   ----    ----
+   XDATA SIZE       =      1    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      1    ----
+   DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

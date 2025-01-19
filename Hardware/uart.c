@@ -1,4 +1,5 @@
 #include "uart.h"
+#include "stdio.h"
 void Uart1_Init(void)	//9600bps@12.000MHz
 {
 	SCON = 0x50;		//8位数据,可变波特率
@@ -10,7 +11,7 @@ void Uart1_Init(void)	//9600bps@12.000MHz
     ES = 1;
     EA = 1;
 }
-extern putchar(unsigned char ch)
+extern char putchar(char ch)
 {
     SBUF = ch;
     while(TI == 0);

@@ -1,5 +1,5 @@
 #include "main.h"
-pdata unsigned char LedBuf[8]={1,1,1,1,0,0,0,0},SegBuf[8] = {16,16,16,16,16,16,16,16};
+pdata unsigned char LedBuf[8]={1,1,1,1,0,0,0,0},SegBuf[8] = {0,0,0,0,0,0,0,0};
 unsigned char Time[3]={11,22,33},RecTime[3],UartBufIndex;
 pdata unsigned char UartBuf[10];
 idata unsigned char UlDis,TaskNum,SysTick,DaVal;
@@ -50,23 +50,18 @@ void KeyProc(void)
 }
 void SegProc(void)
 {
-    // SegBuf[7] = UartBuf[0];
-    // SegBuf[6] = UartBuf[1];
-    // SegBuf[5] = UartBuf[2];
-    // SegBuf[4] = UartBuf[3];
-    // SegBuf[3] = UartBuf[4];
-    // SegBuf[2] = UartBuf[5];
-    // SegBuf[1] = UartBuf[6];
-    // SegBuf[0] = UartBuf[7];
+    SegBuf[7] = UartBuf[0] % 10;
+    SegBuf[6] = UartBuf[0] / 10;
 
-    SegBuf[7] = RecTime[2] % 10;
-    SegBuf[6] = RecTime[2] / 10;
-    SegBuf[5] = 17;
-    SegBuf[4] = RecTime[1] % 10;
-    SegBuf[3] = RecTime[1] / 10;
-    SegBuf[2] = 17;
-    SegBuf[1] = RecTime[0] % 10;
-    SegBuf[0] = RecTime[0] / 10;
+
+    // SegBuf[7] = RecTime[2] % 10;
+    // SegBuf[6] = RecTime[2] / 10;
+    // SegBuf[5] = 17;
+    // SegBuf[4] = RecTime[1] % 10;
+    // SegBuf[3] = RecTime[1] / 10;
+    // SegBuf[2] = 17;
+    // SegBuf[1] = RecTime[0] % 10;
+    // SegBuf[0] = RecTime[0] / 10;
 
     // SegBuf[7] = Frep         % 10;
     // SegBuf[6] = (Frep   / 10 % 10) ;
@@ -92,15 +87,20 @@ void LedProc(void)
     LedDisp(LedBuf);
 }
 void UartProc(void)
-{
-    if(UartBufIndex <= 0)
+{    
+    if(UartBufIndex == 0)
         return;
-    if(SysTick > 10)
+    if(SysTick >= 10)
     {
         SysTick = 0;
         memset(UartBuf,0,UartBufIndex);
         UartBufIndex = 0;
     }
+    if(UartBufIndex == 1)
+    {
+        UartBufIndex = 0;
+    }
+
 }
 
 typedef struct
@@ -140,6 +140,7 @@ void main()
     SetTime(Time);
 	Timer0_Init();
     Timer1_Init();
+    Uart1_Init();
     while(1)
     {
         TaskRun();
@@ -171,7 +172,7 @@ void UartRoutine(void) interrupt 4
         SysTick = 0;
         UartBuf[UartBufIndex++] = SBUF;
         RI = 0;
-        if(UartBufIndex > 10)UartBufIndex = 0;
+        if(UartBufIndex > 10)
             UartBufIndex = 0;
     }
 }

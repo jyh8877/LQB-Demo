@@ -1,10 +1,10 @@
-C51 COMPILER V9.59.0.0   UL                                                                01/19/2025 15:43:01 PAGE 1   
+C51 COMPILER V9.59.0.0   UL                                                                01/19/2025 16:26:56 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE UL
 OBJECT MODULE PLACED IN .\Objects\ul.obj
-COMPILER INVOKED BY: E:\C51\C51\BIN\C51.EXE Hardware\ul.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Hardware;.\User) DEBUG OBJEC
-                    -TEXTEND PRINT(.\Listings\ul.lst) OBJECT(.\Objects\ul.obj)
+COMPILER INVOKED BY: E:\C51\C51\BIN\C51.EXE Hardware\ul.c LARGE OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Hardware;.\User) DEBUG
+                    - OBJECTEXTEND PRINT(.\Listings\ul.lst) OBJECT(.\Objects\ul.obj)
 
 line level    source
 
@@ -54,16 +54,16 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =     89    ----
+   CODE SIZE        =     91    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----    ----
+   DATA SIZE        =   ----       1
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.
 
-C51 COMPILER V9.59.0.0   UL                                                                01/19/2025 15:43:01 PAGE 2   
+C51 COMPILER V9.59.0.0   UL                                                                01/19/2025 16:26:56 PAGE 2   
 
 
 C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
