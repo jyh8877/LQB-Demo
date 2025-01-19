@@ -8,3 +8,4 @@
 #include "iic.h"
 #include "uart.h"
 #include "string.h"
+#include "stdio.h"

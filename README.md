@@ -96,3 +96,72 @@ ans = (tmp >>4 ) *10 + (tmp & 0x0F);
     I2CSendAck(1);
     I2CStop();
 ```
+#### 串口
+##### 初始化
+isp 生成串口1用定时器2作为波特率发生器，1T模式
+ES = 1打开串口中断
+```c
+void Uart1_Init(void)	//9600bps@12.000MHz
+{
+	SCON = 0x50;		//8位数据,可变波特率
+	AUXR |= 0x01;		//串口1选择定时器2为波特率发生器
+	AUXR |= 0x04;		//定时器时钟1T模式
+	T2L = 0xC7;			//设置定时初始值
+	T2H = 0xFE;			//设置定时初始值
+	AUXR |= 0x10;		//定时器2开始计时
+    ES = 1;
+    EA = 1;
+}
+```
+##### 发送接收相关寄存器
+RI:接收中断标志位，必须软件清零
+TI:发送中断标志位,发送成功后硬件把TI写1,必须软件等待到TI写1后清零后发送下一字节
+
+发送过程：
+重写printf的底层putchar(stdio.h中)
+```c
+extern char putchar(char ch)
+{
+    SBUF = ch;
+    while(TI == 0);
+    TI = 0;
+    return ch;
+}
+```
+发送时如果要发送数字需要强转为unsigned int或int等，不能直接发送char作为数字,如
+```c
+unsigned char chh = 123;
+printf("%d",(int)chh);
+printf("%u",(unsigned int)chh);
+```
+接受过程
+接收中断:
+中断号为4，注意手动清除RI
+```c
+void UartRoutine(void) interrupt 4
+{
+    if(RI)
+    {
+        SysTick = 0;
+        UartBuf[UartBufIndex++] = SBUF;
+        RI = 0;
+        if(UartBufIndex > 10)
+            UartBufIndex = 0;
+    }
+}
+```
+处理过程：
+如果超时就清空接受数组
+```c
+void UartProc(void)
+{    
+    if(UartBufIndex == 0)
+        return;
+    if(SysTick >= 10)
+    {
+        SysTick = 0;
+        memset(UartBuf,0,UartBufIndex);
+        UartBufIndex = 0;
+    }
+}
+```

@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 16:29:42 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 19:17:23 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -18,53 +18,53 @@ line level    source
    8          float Temper;
    9          unsigned int TemperShow,Frep;
   10          unsigned int Time1s;
-  11          void Timer0_Init(void)          //100微秒@12.000MHz
-  12          {
-  13   1              AUXR &= 0x7F;                   //定时器时钟12T模式
-  14   1              TMOD &= 0xF0;                   //设置定时器模式
-  15   1          TMOD |= 0x05;
-  16   1              TL0 = 0x00;                             //设置定时初始值
-  17   1              TH0 = 0x00;                             //设置定时初始值
-  18   1              TF0 = 0;                                //清除TF0标志
-  19   1              TR0 = 1;                                //定时器0开始计时
-  20   1      }
-  21          void Timer1_Init(void)          //1毫秒@12.000MHz
-  22          {
-  23   1              AUXR &= 0xBF;                   //定时器时钟12T模式
-  24   1              TMOD &= 0x0F;                   //设置定时器模式
-  25   1              TL1 = 0x18;                             //设置定时初始值
-  26   1              TH1 = 0xFC;                             //设置定时初始值
-  27   1              TF1 = 0;                                //清除TF1标志
-  28   1              TR1 = 1;                                //定时器1开始计时
-  29   1          ET1 = 1;
-  30   1          EA = 1;
-  31   1      }
-  32          void DataProc(void)
-  33          {
-  34   1          if(Time1s % 150)return;
-  35   1          //ReadTime(RecTime);
-  36   1          Temper = ReadTemp() ;
-  37   1              TemperShow = Temper * 10;
-  38   1              
-  39   1      }
-  40          void KeyProc(void)
-  41          {
-  42   1      
-  43   1          static unsigned int KeyOld,KeyVal,KeyDown,KeyUp;
-  44   1          if(Time1s % 20) return;
-  45   1          KeyVal = KeyRead();
-  46   1          KeyUp = ~KeyVal & (KeyOld ^ KeyVal);
-  47   1          KeyDown = KeyVal & (KeyOld ^ KeyVal);
-  48   1              KeyOld = KeyVal;
-  49   1        
-  50   1      }
-  51          void SegProc(void)
-  52          {
-  53   1          SegBuf[7] = UartBuf[0] % 10;
-  54   1          SegBuf[6] = UartBuf[0] / 10;
-C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 16:29:42 PAGE 2   
+  11          unsigned char chh = 123;
+  12          void Timer0_Init(void)          //100微秒@12.000MHz
+  13          {
+  14   1              AUXR &= 0x7F;                   //定时器时钟12T模式
+  15   1              TMOD &= 0xF0;                   //设置定时器模式
+  16   1          TMOD |= 0x05;
+  17   1              TL0 = 0x00;                             //设置定时初始值
+  18   1              TH0 = 0x00;                             //设置定时初始值
+  19   1              TF0 = 0;                                //清除TF0标志
+  20   1              TR0 = 1;                                //定时器0开始计时
+  21   1      }
+  22          void Timer1_Init(void)          //1毫秒@12.000MHz
+  23          {
+  24   1              AUXR &= 0xBF;                   //定时器时钟12T模式
+  25   1              TMOD &= 0x0F;                   //设置定时器模式
+  26   1              TL1 = 0x18;                             //设置定时初始值
+  27   1              TH1 = 0xFC;                             //设置定时初始值
+  28   1              TF1 = 0;                                //清除TF1标志
+  29   1              TR1 = 1;                                //定时器1开始计时
+  30   1          ET1 = 1;
+  31   1          EA = 1;
+  32   1      }
+  33          void DataProc(void)
+  34          {
+  35   1          if(Time1s % 150)return;
+  36   1          //ReadTime(RecTime);
+  37   1          Temper = ReadTemp() ;
+  38   1              TemperShow = Temper * 10;
+  39   1              
+  40   1      }
+  41          void KeyProc(void)
+  42          {
+  43   1      
+  44   1          static unsigned int KeyOld,KeyVal,KeyDown,KeyUp;
+  45   1          if(Time1s % 20) return;
+  46   1          KeyVal = KeyRead();
+  47   1          KeyUp = ~KeyVal & (KeyOld ^ KeyVal);
+  48   1          KeyDown = KeyVal & (KeyOld ^ KeyVal);
+  49   1              KeyOld = KeyVal;
+  50   1        
+  51   1      }
+  52          void SegProc(void)
+  53          {
+  54   1          SegBuf[7] = UartBuf[0] % 10;
+C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 19:17:23 PAGE 2   
 
-  55   1      
+  55   1          SegBuf[6] = UartBuf[0] / 10;
   56   1      
   57   1          // SegBuf[7] = RecTime[2] % 10;
   58   1          // SegBuf[6] = RecTime[2] / 10;
@@ -108,96 +108,92 @@ line level    source
   96   2              memset(UartBuf,0,UartBufIndex);
   97   2              UartBufIndex = 0;
   98   2          }
-  99   1          if(UartBufIndex == 1)
- 100   1          {
- 101   2              UartBufIndex = 0;
- 102   2          }
- 103   1      
- 104   1      }
- 105          
- 106          typedef struct
- 107          {
- 108              void (*TaskFunc)(void);
- 109              unsigned long int Ratems;
- 110              unsigned long int LastRun;
- 111              }TaskType;
- 112          TaskType TaskList[] ={
- 113              {LedProc,1,0},
- 114              {GetTime,300,0},
- 115              {ADDA,160,0},
- 116              {UartProc,10,0},
-C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 16:29:42 PAGE 3   
+  99   1      }
+ 100          
+ 101          typedef struct
+ 102          {
+ 103              void (*TaskFunc)(void);
+ 104              unsigned long int Ratems;
+ 105              unsigned long int LastRun;
+ 106              }TaskType;
+ 107          TaskType TaskList[] ={
+ 108              {LedProc,1,0},
+ 109              {GetTime,300,0},
+ 110              {ADDA,160,0},
+ 111              {UartProc,10,0},
+ 112              {SegProc,200,0}
+ 113          };
+ 114          void TaskListInit()
+ 115          {
+ 116   1          TaskNum = sizeof(TaskList) / sizeof(TaskType);
+C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 19:17:23 PAGE 3   
 
- 117              {SegProc,200,0}
- 118          };
- 119          void TaskListInit()
- 120          {
- 121   1          TaskNum = sizeof(TaskList) / sizeof(TaskType);
- 122   1      }
- 123          void TaskRun(void)
- 124          {
- 125   1          unsigned char i;
- 126   1          for(i = 0;i < TaskNum;i++)
- 127   1          {
- 128   2              unsigned long int NowTime = uwTime;
- 129   2              if(NowTime > (TaskList[i].LastRun + TaskList[i].Ratems))
- 130   2              {
- 131   3                  TaskList[i].LastRun = NowTime;
- 132   3                  TaskList[i].TaskFunc();
- 133   3              }
- 134   2          }
- 135   1      }
- 136          
- 137          void main()
- 138          {
- 139   1          TaskListInit();
- 140   1          SetTime(Time);
- 141   1              Timer0_Init();
- 142   1          Timer1_Init();
- 143   1          Uart1_Init();
- 144   1          while(1)
- 145   1          {
- 146   2              TaskRun();
- 147   2          }
- 148   1      }
- 149          
- 150          void Routine1(void) interrupt 3 
- 151          {
- 152   1          static unsigned char SegPos = 0;
- 153   1          Time1s++;uwTime++;SysTick++;
- 154   1          if(Time1s == 1000)
- 155   1          {
- 156   2              Frep = ((TH0 << 8) | TL0);
- 157   2              TH0 = TL0 = 0;
- 158   2              Time1s = 0;
- 159   2          }
- 160   1          
- 161   1          SegPos = (++SegPos) % 8;
- 162   1          if(SegBuf[SegPos] > 20)
- 163   1              SegDisp(SegPos,SegBuf[SegPos]-'.',1);
- 164   1          else
- 165   1              SegDisp(SegPos,SegBuf[SegPos],0);
- 166   1      }
- 167          
- 168          void UartRoutine(void) interrupt 4
- 169          {
- 170   1          if(RI)
- 171   1          {
- 172   2              SysTick = 0;
- 173   2              UartBuf[UartBufIndex++] = SBUF;
- 174   2              RI = 0;
- 175   2              if(UartBufIndex > 10)
- 176   2                  UartBufIndex = 0;
- 177   2          }
- 178   1      }
-C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 16:29:42 PAGE 4   
-
+ 117   1      }
+ 118          void TaskRun(void)
+ 119          {
+ 120   1          unsigned char i;
+ 121   1          for(i = 0;i < TaskNum;i++)
+ 122   1          {
+ 123   2              unsigned long int NowTime = uwTime;
+ 124   2              if(NowTime > (TaskList[i].LastRun + TaskList[i].Ratems))
+ 125   2              {
+ 126   3                  TaskList[i].LastRun = NowTime;
+ 127   3                  TaskList[i].TaskFunc();
+ 128   3              }
+ 129   2          }
+ 130   1      }
+ 131          
+ 132          void main()
+ 133          {
+ 134   1          TaskListInit();
+ 135   1          SetTime(Time);
+ 136   1              Timer0_Init();
+ 137   1          Timer1_Init();
+ 138   1          Uart1_Init();
+ 139   1          printf("%u",(int)chh);
+ 140   1          while(1)
+ 141   1          {
+ 142   2              TaskRun();
+ 143   2          }
+ 144   1      }
+ 145          
+ 146          void Routine1(void) interrupt 3 
+ 147          {
+ 148   1          static unsigned char SegPos = 0;
+ 149   1          Time1s++;uwTime++;SysTick++;
+ 150   1          if(Time1s == 1000)
+ 151   1          {
+ 152   2              Frep = ((TH0 << 8) | TL0);
+ 153   2              TH0 = TL0 = 0;
+ 154   2              Time1s = 0;
+ 155   2          }
+ 156   1          
+ 157   1          SegPos = (++SegPos) % 8;
+ 158   1          if(SegBuf[SegPos] > 20)
+ 159   1              SegDisp(SegPos,SegBuf[SegPos]-'.',1);
+ 160   1          else
+ 161   1              SegDisp(SegPos,SegBuf[SegPos],0);
+ 162   1      }
+ 163          
+ 164          void UartRoutine(void) interrupt 4
+ 165          {
+ 166   1          if(RI)
+ 167   1          {
+ 168   2              SysTick = 0;
+ 169   2              UartBuf[UartBufIndex++] = SBUF;
+ 170   2              RI = 0;
+ 171   2              if(UartBufIndex > 10)
+ 172   2                  UartBufIndex = 0;
+ 173   2          }
+ 174   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    799    ----
-   CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     85       5
+   CODE SIZE        =    812    ----
+C51 COMPILER V9.59.0.0   MAIN                                                              01/19/2025 19:17:23 PAGE 4   
+
+   CONSTANT SIZE    =      3    ----
+   XDATA SIZE       =     86       5
    PDATA SIZE       =     26    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =      6    ----

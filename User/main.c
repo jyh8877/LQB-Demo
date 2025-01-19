@@ -8,6 +8,7 @@ unsigned long int uwTime;
 float Temper;
 unsigned int TemperShow,Frep;
 unsigned int Time1s;
+unsigned char chh = 123;
 void Timer0_Init(void)		//100微秒@12.000MHz
 {
 	AUXR &= 0x7F;			//定时器时钟12T模式
@@ -53,7 +54,6 @@ void SegProc(void)
     SegBuf[7] = UartBuf[0] % 10;
     SegBuf[6] = UartBuf[0] / 10;
 
-
     // SegBuf[7] = RecTime[2] % 10;
     // SegBuf[6] = RecTime[2] / 10;
     // SegBuf[5] = 17;
@@ -96,11 +96,6 @@ void UartProc(void)
         memset(UartBuf,0,UartBufIndex);
         UartBufIndex = 0;
     }
-    if(UartBufIndex == 1)
-    {
-        UartBufIndex = 0;
-    }
-
 }
 
 typedef struct
@@ -141,6 +136,7 @@ void main()
 	Timer0_Init();
     Timer1_Init();
     Uart1_Init();
+    printf("%u",(int)chh);
     while(1)
     {
         TaskRun();
