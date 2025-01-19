@@ -2,7 +2,8 @@
 pdata unsigned char LedBuf[8]={1,1,1,1,0,0,0,0},SegBuf[8] = {16,16,16,16,16,16,16,16};
 unsigned char Time[3]={11,22,33},RecTime[3],UartBufIndex;
 pdata unsigned char UartBuf[10];
-idata unsigned char UlDis,ADVal,DaVal,TaskNum,SysTick;
+idata unsigned char UlDis,TaskNum,SysTick,DaVal;
+idata unsigned int ADValx10;
 unsigned long int uwTime;
 float Temper;
 unsigned int TemperShow,Frep;
@@ -49,24 +50,34 @@ void KeyProc(void)
 }
 void SegProc(void)
 {
-    if(Time1s % 20) return;
-    // SegBuf[7] = RecTime[2] % 10;
-    // SegBuf[6] = RecTime[2] / 10;
-    // SegBuf[5] = 17;
-    // SegBuf[4] = RecTime[1] % 10;
-    // SegBuf[3] = RecTime[1] / 10;
-    // SegBuf[2] = 17;
-    
-    SegBuf[7] = Frep         % 10;
-    SegBuf[6] = (Frep   / 10 % 10) ;
-    SegBuf[5] = Frep   / 100 %10;
-    SegBuf[4] = Frep  / 1000 %10;
-    SegBuf[3] = Frep / 10000;
+    // SegBuf[7] = UartBuf[0];
+    // SegBuf[6] = UartBuf[1];
+    // SegBuf[5] = UartBuf[2];
+    // SegBuf[4] = UartBuf[3];
+    // SegBuf[3] = UartBuf[4];
+    // SegBuf[2] = UartBuf[5];
+    // SegBuf[1] = UartBuf[6];
+    // SegBuf[0] = UartBuf[7];
+
+    SegBuf[7] = RecTime[2] % 10;
+    SegBuf[6] = RecTime[2] / 10;
+    SegBuf[5] = 17;
+    SegBuf[4] = RecTime[1] % 10;
+    SegBuf[3] = RecTime[1] / 10;
+    SegBuf[2] = 17;
+    SegBuf[1] = RecTime[0] % 10;
+    SegBuf[0] = RecTime[0] / 10;
+
+    // SegBuf[7] = Frep         % 10;
+    // SegBuf[6] = (Frep   / 10 % 10) ;
+    // SegBuf[5] = Frep   / 100 %10;
+    // SegBuf[4] = Frep  / 1000 %10;
+    // SegBuf[3] = Frep / 10000;
 } 
 void ADDA(void)
 {
-    ADVal = AdRead(0x41);
-    DaWrite(DaVal);
+    ADValx10 = AdRead(0x41) * 10;
+    DaWrite(DaVal*51);
 }
 void GetTime(void)
 {
@@ -99,11 +110,11 @@ typedef struct
     unsigned long int LastRun;
     }TaskType;
 TaskType TaskList[] ={
-    {GetTime,100,0},
+    {LedProc,1,0},
+    {GetTime,300,0},
     {ADDA,160,0},
-    {SegProc,100,0},
     {UartProc,10,0},
-    {LedProc,1,0}
+    {SegProc,200,0}
 };
 void TaskListInit()
 {
