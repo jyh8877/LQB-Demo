@@ -6,3 +6,5 @@
 #include "ds1302.h"
 #include "onewire.h"
 #include "iic.h"
+#include "uart.h"
+#include "string.h"
