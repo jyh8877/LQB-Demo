@@ -2,7 +2,7 @@
 ## [锁存器](#1)
 ## [定时器相关](#2)
 ## [pca捕获计数器](#3)
-## [按键三行消除抖动](#4)
+## [按键](#4)
 ## [十六进制数转换十进制数](#5)
 ## [通讯协议](#6)
 ### <div id = '1'>锁存器 </div>
@@ -39,29 +39,27 @@ P2 &= 0x1f;
 定时器1 选择1ms中断，16位自动重载，12T模式
 定时器2 用于串口
 #### 定时器以及中断相关寄存器
-##### ==EA中断使能寄存器==初始化时候EA = 1；
-##### ==ET1 定时器1中断使能==
+##### <mark>EA中断使能寄存器</mark>初始化时候EA = 1；
+##### <mark>ET1 定时器1中断使能</mark>
 
 ### <div id = 3>ulSound-pca捕获相关</div>
 #### 步骤:
 1.发送8个方波40MHz方波(发送前关闭总中断,发送后开启) 
 2.配置pca
-3.等到收到方波(收到后Rx为0)
-```c
-while((Rx == 1) && (CF == 0));
-```
-4. 收到后time * 0.017(340 * time / 2 / 1000)
+3.等到收到方波(收到后Rx为0)`while((Rx == 1) && (CF == 0));`
+4. 收到后`time * 0.017(340 * time / 2 / 1000)`
 #### 重要定时器
 ##### CMOD:配置成0x00;
 ##### CF:溢出寄存器，溢出写完会变1，记得软件清零
 ##### CR：计数允许寄存器，写1才可以计数，用完记得写0
-##### ==CH,CL==:计数器高八位和低八位，用前记得清零
+##### <mark>CH,CL</mark>:计数器高八位和低八位，用前记得清零
 ```c
-time = (CH << 8) | CL
+time = (CH << 8) | CL;
 ```
 得到计数器的值
 
-### <div id = 4>按键三行消除抖动</div>
+### <div id = 4>按键</div>
+#### 按键三行消除抖动
 ```c
 static unsigned char KeyVal,KeyOld,KeyDown,KeyUp;
 KeyVal = KeyRead();
@@ -69,19 +67,77 @@ KeyDown = KeyVal & (KeyVal ^ KeyOld);
 KeyUp = ~KeyVal & (KeyVal ^ KeyOld);
 KeyOld = KeyVal;
 ```
+#### 获取16个按键的状态
+
+![alt text](image-1.png)
+由图可见col1与row4对应的最小的键号
+同时P30对应row1。所以col正常选择后用
+`(P3 & (0x08 >> row)) == 0`来反向选择row
+`P3 == 0`表明此时(3-row)和col对应的按键被按下
+`KeyNum`的对应表示16个按键的状态所以要用<mark>|=</mark>
+`KeyNum |=(1 << (col * 4 + row))` 
+```c
+unsigned int KeyRead(void)
+{
+    int col ,row;
+    unsigned int KeyNum = 0;
+    for(col = 0;col < 4;col++)
+    {
+        P44 = (col != 0);
+        P42 = (col != 1);
+        P35 = (col != 2);
+        //P34 = (col != 3);
+        for(row = 0;row<4;row++)
+        {
+            if( (P3 & (0x08 >> row)) == 0  )
+            {
+                KeyNum |=(1 << (col * 4 + row));
+            }
+        }
+    }
+    P3 = 0xff;
+    return KeyNum;
+}
+```
+调用方法：
+`0x0001 << (i - 4)`对应的按钮号和实际序号差4
+`KeyDown & KeyNum(i)`清空其他位置，只看某一位
+Key.h里
+```c
+#define KeyNum(i) 0x0001 << (i - 4)
+#define KeyDownNum(i) ((KeyDown & KeyNum(i)) != 0)
+#define KeyUpNum(i) ((KeyUp & KeyNum(i)) != 0)
+```
+消抖获得`KeyDown`后
+下程序实现按下4，按下5，同时按下45 分别处理不同的事件
+```
+    if(KeyDownNum(4) && !(KeyDownNum(5)))
+    {
+        SegBuf[0]++;
+    }
+    if(!(KeyDownNum(4)) && (KeyDownNum(5)))
+    {
+        SegBuf[1]++;
+    }   
+    if((KeyDownNum(4)) && (KeyDownNum(5)))
+    {
+        SegBuf[2]++;
+    }      
+```
+
 ### <div id = 5>进制相关</div>
 #### 10转换16进制
 ```c
 ans = num / 10 << 4 |  num % 10;
 ```
-#### 16转换10进制==务必加括号==
+#### 16转换10进制<mark>务必加括号</mark>
 ```c
 ans = (tmp >>4 ) *10 + (tmp & 0x0F);
 ```
 ### <div id =6>通讯</div>
 #### iic通讯 读模式
-1.读数据前必须先在指定位置写一个空字符==写模式后不需要stop==
-2.ack==写1不继续读==，写0继续读取
+1.读数据前必须先在指定位置写一个空字符<mark>写模式后不需要stop</mark>
+2.ack<mark>写1不继续读</mark>，写0继续读取
 ```c
     I2CStart();
     I2CSendByte(0x90);
@@ -128,7 +184,7 @@ extern char putchar(char ch)
     return ch;
 }
 ```
-发送时如果要发送数字需要强转为unsigned int或int等，不能直接发送char作为数字,如
+<mark>发送时如果要发送数字需要强转为unsigned int或int等，不能直接发送char作为数字,如</mark>
 ```c
 unsigned char chh = 123;
 printf("%d",(int)chh);
@@ -136,7 +192,7 @@ printf("%u",(unsigned int)chh);
 ```
 接受过程
 接收中断:
-中断号为4，注意手动清除RI
+中断号为4，<mark>注意手动清除RI</mark>
 ```c
 void UartRoutine(void) interrupt 4
 {

@@ -47,12 +47,23 @@ void KeyProc(void)
     KeyUp = ~KeyVal & (KeyOld ^ KeyVal);
     KeyDown = KeyVal & (KeyOld ^ KeyVal);
 	KeyOld = KeyVal;
-  
+    if(KeyDownNum(4) && !(KeyDownNum(5)))
+    {
+        SegBuf[0]++;
+    }
+    if(!(KeyDownNum(4)) && (KeyDownNum(5)))
+    {
+        SegBuf[1]++;
+    }   
+    if((KeyDownNum(4)) && (KeyDownNum(5)))
+    {
+        SegBuf[2]++;
+    }      
 }
 void SegProc(void)
 {
-    SegBuf[7] = UartBuf[0] % 10;
-    SegBuf[6] = UartBuf[0] / 10;
+    // SegBuf[7] = UartBuf[0] % 10;
+    // SegBuf[6] = UartBuf[0] / 10;
 
     // SegBuf[7] = RecTime[2] % 10;
     // SegBuf[6] = RecTime[2] / 10;
@@ -107,6 +118,7 @@ typedef struct
 TaskType TaskList[] ={
     {LedProc,1,0},
     {GetTime,300,0},
+    {KeyProc,10,0},
     {ADDA,160,0},
     {UartProc,10,0},
     {SegProc,200,0}
