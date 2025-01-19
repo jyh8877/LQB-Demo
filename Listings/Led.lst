@@ -1,0 +1,47 @@
+C51 COMPILER V9.59.0.0   LED                                                               01/18/2025 11:56:40 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Objects\Led.obj
+COMPILER INVOKED BY: E:\C51\C51\BIN\C51.EXE Hardware\Led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Hardware;.\User) DEBUG OBJE
+                    -CTEXTEND PRINT(.\Listings\Led.lst) OBJECT(.\Objects\Led.obj)
+
+line level    source
+
+   1          #include "Led.h"
+   2          void LedLock(void)
+   3          {
+   4   1          P2 = (P2 & 0x1f) | 0x80;
+   5   1          P2 &= 0x1f;
+   6   1      }
+   7          void LedDisp(unsigned char *LedBuf)
+   8          {
+   9   1          static unsigned char Old = 0xff;unsigned char Now = 0;
+  10   1          Now |= (LedBuf[0]<<0) | (LedBuf[1]<<1) | (LedBuf[2]<<2) | (LedBuf[3]<<3) | 
+  11   1          (LedBuf[4]<<4) | (LedBuf[5]<<5) | (LedBuf[6]<<6) | (LedBuf[7]<<7);
+  12   1          if(Now != Old)
+  13   1          {
+  14   2              P0 = ~Now;
+  15   2              LedLock();
+  16   2              Old= Now;
+  17   2          }
+  18   1      }
+  19          void LedTurnOff()
+  20          {
+  21   1          P0 = 0xff;
+  22   1          LedLock();
+  23   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    122    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,72 @@
+C51 COMPILER V9.59.0.0   SEG                                                               01/18/2025 11:56:40 PAGE 1   
+
+
+C51 COMPILER V9.59.0.0, COMPILATION OF MODULE SEG
+OBJECT MODULE PLACED IN .\Objects\Seg.obj
+COMPILER INVOKED BY: E:\C51\C51\BIN\C51.EXE Hardware\Seg.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\Hardware;.\User) DEBUG OBJE
+                    -CTEXTEND PRINT(.\Listings\Seg.lst) OBJECT(.\Objects\Seg.obj)
+
+line level    source
+
+   1          #include "Seg.h"
+   2          
+   3          code unsigned char SegTable[] =
+   4          {
+   5          0xc0, //0
+   6          0xf9, //1
+   7          0xa4, //2
+   8          0xb0, //3
+   9          0x99, //4
+  10          0x92, //5
+  11          0x82, //6
+  12          0xf8, //7
+  13          0x80, //8
+  14          0x90, //9
+  15          
+  16          0x88, //A
+  17          0x83, //b
+  18          0xc6, //C
+  19          0xa1, //d
+  20          0x86, //E
+  21          0x8e, //F
+  22          0xff, // 16 none
+  23          0xbf //17 -
+  24          };
+  25          
+  26          void ComLock()
+  27          {
+  28   1          P2 = (P2 & 0x1f) | 0xC0;
+  29   1          P2 &= 0x1f;    
+  30   1      }
+  31          void SegLock()
+  32          {
+  33   1          P2 = (P2 & 0x1f) | 0xE0;
+  34   1          P2 &= 0x1f;
+  35   1      }
+  36          void SegDisp(unsigned char Add,unsigned char Str,unsigned char Point)
+  37          {
+  38   1          P0 = 0xff;
+  39   1          SegLock();
+  40   1          P0 = 0x01<<Add;
+  41   1          ComLock();
+  42   1          P0 = SegTable[Str];
+  43   1          if(Point)
+  44   1              P0 &= 0x7f;
+  45   1          SegLock();
+  46   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     62    ----
+   CONSTANT SIZE    =     18    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+C51 COMPILER V9.59.0.0   SEG                                                               01/18/2025 11:56:40 PAGE 2   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
