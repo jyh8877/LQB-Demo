@@ -18,6 +18,6 @@ unsigned int KeyRead(void)
             }
         }
     }
-    P3 = 0xff;
+    //P3 = 0xff;
     return KeyNum;
 }
