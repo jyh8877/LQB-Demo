@@ -5,6 +5,8 @@
 ## [按键](#4)
 ## [十六进制数转换十进制数](#5)
 ## [通讯协议](#6)
+## [超声波测距](#7)
+## [频率测量](#8)
 ### <div id = '1'>锁存器 </div>
 
 74HC138控制选择写入哪个寄存器(Y4,Y5,Y6,Y7)
@@ -222,3 +224,45 @@ void UartProc(void)
     }
 }
 ```
+### <div id = 7>超声波测距</div>
+#### 发送方波
+<mark> 发送前后需要关闭/打开中断</mark>
+```c
+void SendUlSound(void)
+{
+    unsigned char i;
+    EA = 0;
+    for(i = 0;i<8;i++)
+    {
+        Tx = 1;
+        Delay12us();
+        Tx = 0;
+        Delay12us();
+    }
+    EA = 1;
+}
+```
+<mark> CR为计数开始寄存器</mark>
+<mark>收到数据时Rx = 0,等待过程`while((Rx == 1) && (CF == 0));`</mark>
+```c
+unsigned char GetUlSound(void)
+{
+    CMOD = 0x00;
+    CH = CL = 0;
+    CR = 1;
+    SendUlSound();
+    while((Rx == 1) && (CF == 0));
+    CR = 0;
+    if(CF == 0)
+    {
+        return 0.017 * ( CH<<8 | CL);
+    }
+    else
+    {
+        CF = 0;
+        return 0;
+    }
+}
+```
+### <div id = 8>频率测量</div>
+定时器0配置为计数器，不自动重载，手动把TH0,TL0置0
