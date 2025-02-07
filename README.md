@@ -7,6 +7,7 @@
 ## [通讯协议](#6)
 ## [超声波测距](#7)
 ## [频率测量](#8)
+## [任务调度器](#9)
 ### <div id = '1'>锁存器 </div>
 
 74HC138控制选择写入哪个寄存器(Y4,Y5,Y6,Y7)
@@ -265,4 +266,33 @@ unsigned char GetUlSound(void)
 }
 ```
 ### <div id = 8>频率测量</div>
-定时器0配置为计数器，不自动重载，手动把TH0,TL0置0
+定时器0配置为计数器，不自动重载，软件把TH0,TL0置0
+### <div id = 9>任务调度器</div>
+定义任务结构体
+```c
+typedef struct{
+    void (*TaskFunc)(void);
+    unsigned long int Ratems;
+    unsigned long int LastRun;
+} TaskT;
+```
+其中`void(*TaskFunc)(void)`表示：
+TaskFunc 是一个指针。
+它指向一个没有参数（void 在括号内）且没有返回值（void 在左侧）的函数。
+调用
+```c
+void TaskRun(void)
+{
+    unsigned long int Now;
+    unsigned char i;
+    for(i = 0;i < TaskNum;i++)
+    {
+        Now = uwTime;
+        if(Now > TaskList[i].LastRun + TaskList[i].Ratems)
+        {
+            TaskList[i].TaskFunc();
+            TaskList[i].LastRun = Now;
+        }
+    }
+}
+```
