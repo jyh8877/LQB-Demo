@@ -113,9 +113,9 @@ unsigned char AdRead(unsigned char Add)
     I2CStart();
     I2CSendByte(0x90);
     I2CWaitAck();
-    I2CSendByte(Add);
+    I2CSendByte(Add); 
     I2CWaitAck();
-
+    
     I2CStart();
     I2CSendByte(0x91);
     I2CWaitAck();

@@ -89,7 +89,7 @@ void SegProc(void)
 } 
 void AD(void)
 {
-    ADValx10 = ((float)AdRead() / 255.0) * 50;
+    ADValx10 = ((float)AdRead(0x43) / 255.0) * 50;
 }
 void DA(void)
 {
@@ -133,7 +133,7 @@ TaskType TaskList[] ={
     {GetTime,300,0},
     {KeyProc,20,0},
     {AD,160,0},
-    {DA,160,0},
+    //{DA,160,0},
     {UartProc,10,0},
     {Tp,200,0},
     {SegProc,200,0}

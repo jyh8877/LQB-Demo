@@ -1,4 +1,4 @@
-C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:17:13 PAGE 1   
+C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:33:36 PAGE 1   
 
 
 C51 COMPILER V9.59.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52   1      }
   53          void SegProc(void)
   54          {
-C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:17:13 PAGE 2   
+C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:33:36 PAGE 2   
 
   55   1          // SegBuf[7] = UartBuf[0] % 10;
   56   1          // SegBuf[6] = UartBuf[0] / 10;
@@ -101,8 +101,7 @@ line level    source
   89   1      } 
   90          void AD(void)
   91          {
-  92   1          ADValx10 = ((float)AdRead() / 255.0) * 50;
-*** WARNING C209 IN LINE 92 OF main.c: '_AdRead': too few actual parameters
+  92   1          ADValx10 = ((float)AdRead(0x43) / 255.0) * 50;
   93   1      }
   94          void DA(void)
   95          {
@@ -126,9 +125,9 @@ line level    source
  113   1              return;
  114   1          if(SysTick >= 10)
  115   1          {
-C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:17:13 PAGE 3   
-
  116   2              SysTick = 0;
+C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:33:36 PAGE 3   
+
  117   2              memset(UartBuf,0,UartBufIndex);
  118   2              UartBufIndex = 0;
  119   2          }
@@ -148,7 +147,7 @@ line level    source
  133              {GetTime,300,0},
  134              {KeyProc,20,0},
  135              {AD,160,0},
- 136              {DA,160,0},
+ 136              //{DA,160,0},
  137              {UartProc,10,0},
  138              {Tp,200,0},
  139              {SegProc,200,0}
@@ -190,9 +189,9 @@ line level    source
  175   1          static unsigned char SegPos = 0;
  176   1          Time1s++;uwTime++;SysTick++;
  177   1          if(Time1s == 1000)
-C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:17:13 PAGE 4   
-
  178   1          {
+C51 COMPILER V9.59.0.0   MAIN                                                              02/09/2025 10:33:36 PAGE 4   
+
  179   2              Frep = ((TH0 << 8) | TL0);
  180   2              TH0 = TL0 = 0;
  181   2              Time1s = 0;
@@ -219,9 +218,9 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1100    ----
+   CODE SIZE        =   1102    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =    114       5
+   XDATA SIZE       =    103       5
    PDATA SIZE       =     26    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =      7    ----
@@ -229,4 +228,4 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
 END OF MODULE INFORMATION.
 
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
