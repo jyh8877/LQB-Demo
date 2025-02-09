@@ -111,13 +111,13 @@ unsigned char AdRead(unsigned char Add)
 {
     unsigned char AdVal;
     I2CStart();
-    I2CSendByte(0x91);
+    I2CSendByte(0x90);
     I2CWaitAck();
     I2CSendByte(Add);
     I2CWaitAck();
 
     I2CStart();
-    I2CSendByte(0x90);
+    I2CSendByte(0x91);
     I2CWaitAck();
     AdVal = I2CReceiveByte();
     I2CSendAck(1);

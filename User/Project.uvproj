@@ -324,7 +324,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\Hardware;.\User</IncludePath>
+              <IncludePath>..\Hardware;..\User</IncludePath>
             </VariousControls>
           </C51>
           <Ax51>
@@ -374,51 +374,6 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Hardware</GroupName>
-          <Files>
-            <File>
-              <FileName>Led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\Led.c</FilePath>
-            </File>
-            <File>
-              <FileName>Seg.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\Seg.c</FilePath>
-            </File>
-            <File>
-              <FileName>Key.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\Key.c</FilePath>
-            </File>
-            <File>
-              <FileName>ul.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\ul.c</FilePath>
-            </File>
-            <File>
-              <FileName>ds1302.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\ds1302.c</FilePath>
-            </File>
-            <File>
-              <FileName>onewire.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\onewire.c</FilePath>
-            </File>
-            <File>
-              <FileName>iic.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\iic.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Hardware\uart.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>User</GroupName>
           <Files>
             <File>
@@ -429,12 +384,52 @@
             <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\User\main.c</FilePath>
+              <FilePath>.\main.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Hardware</GroupName>
+          <Files>
+            <File>
+              <FileName>ds1302.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\ds1302.c</FilePath>
             </File>
             <File>
-              <FileName>main.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\User\main.h</FilePath>
+              <FileName>iic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\iic.c</FilePath>
+            </File>
+            <File>
+              <FileName>Key.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Key.c</FilePath>
+            </File>
+            <File>
+              <FileName>Led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Led.c</FilePath>
+            </File>
+            <File>
+              <FileName>onewire.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\onewire.c</FilePath>
+            </File>
+            <File>
+              <FileName>Seg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Seg.c</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\uart.c</FilePath>
+            </File>
+            <File>
+              <FileName>ul.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\ul.c</FilePath>
             </File>
           </Files>
         </Group>

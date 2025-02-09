@@ -2,13 +2,18 @@
 pdata unsigned char LedBuf[8]={1,1,1,1,0,0,0,0},SegBuf[8] = {0,0,0,0,0,0,0,0};
 unsigned char Time[3]={11,22,33},RecTime[3],UartBufIndex;
 pdata unsigned char UartBuf[10];
-idata unsigned char UlDis,TaskNum,SysTick,DaVal;
+idata unsigned char UlDis,TaskNum,SysTick,DaVal,Mode;
 idata unsigned int ADValx10;
 unsigned long int uwTime;
-float Temper;
-unsigned int TemperShow,Frep;
+unsigned int Temperx10;
+unsigned int Frep;
 unsigned int Time1s;
-unsigned char chh = 123;
+void ModeInit(void)
+{
+    unsigned char i;
+    for(i = 0;i < 8;i++)
+        SegBuf[i] = 16;
+}
 void Timer0_Init(void)		//100微秒@12.000MHz
 {
 	AUXR &= 0x7F;			//定时器时钟12T模式
@@ -30,14 +35,6 @@ void Timer1_Init(void)		//1毫秒@12.000MHz
     ET1 = 1;
     EA = 1;
 }
-void DataProc(void)
-{
-    if(Time1s % 150)return;
-    //ReadTime(RecTime);
-    Temper = ReadTemp() ;
-	TemperShow = Temper * 10;
-	
-}
 void KeyProc(void)
 {
 
@@ -48,47 +45,55 @@ void KeyProc(void)
 	KeyOld = KeyVal;
     if(KeyDownNum(4))
     {
-        if(!KeyDownNum(5))
-        {
-            SegBuf[0]++;
-        }
+		ModeInit();
+        Mode = (++Mode) % 4;
     }
-    if(KeyDownNum(5))
-    {
-        if(!KeyDownNum(4))
-        {
-            SegBuf[1]++;
-        }
-    }
-    if(KeyDownNum(4) & KeyDownNum(5))
-    {
-        SegBuf[2]++;
-    }
+        
 }
 void SegProc(void)
 {
     // SegBuf[7] = UartBuf[0] % 10;
     // SegBuf[6] = UartBuf[0] / 10;
 
-    // SegBuf[7] = RecTime[2] % 10;
-    // SegBuf[6] = RecTime[2] / 10;
-    // SegBuf[5] = 17;
-    // SegBuf[4] = RecTime[1] % 10;
-    // SegBuf[3] = RecTime[1] / 10;
-    // SegBuf[2] = 17;
-    // SegBuf[1] = RecTime[0] % 10;
-    // SegBuf[0] = RecTime[0] / 10;
 
-    // SegBuf[7] = Frep         % 10;
-    // SegBuf[6] = (Frep   / 10 % 10) ;
-    // SegBuf[5] = Frep   / 100 %10;
-    // SegBuf[4] = Frep  / 1000 %10;
-    // SegBuf[3] = Frep / 10000;
+    if(Mode == 0)
+    {
+        SegBuf[7] = Frep         % 10;
+        SegBuf[6] = (Frep   / 10 % 10) ;
+        SegBuf[5] = Frep   / 100 %10;
+        SegBuf[4] = Frep  / 1000 %10;
+        SegBuf[3] = Frep / 10000;
+    }
+    if(Mode == 1)
+    {
+        SegBuf[7] = RecTime[2] % 10;
+        SegBuf[6] = RecTime[2] / 10;
+        SegBuf[5] = 17;
+        SegBuf[4] = RecTime[1] % 10;
+        SegBuf[3] = RecTime[1] / 10;
+        SegBuf[2] = 17;
+        SegBuf[1] = RecTime[0] % 10;
+        SegBuf[0] = RecTime[0] / 10;
+    }
+    if(Mode == 2)
+    {
+        SegBuf[7] = ADValx10 % 10;
+        SegBuf[6] = ADValx10 / 10 + '.';
+    }
+    if(Mode == 3)
+    {
+        SegBuf[7] = Temperx10 % 10;
+        SegBuf[6] = Temperx10 / 10 % 10 + '.';
+        if(Temperx10 /100 % 10)SegBuf[5] = Temperx10 /100 % 10;else{SegBuf[5] = 16;}
+    }
 } 
-void ADDA(void)
+void AD(void)
 {
-    ADValx10 = AdRead(0x41) * 10;
-    DaWrite(DaVal*51);
+    ADValx10 = ((float)AdRead() / 255.0) * 50;
+}
+void DA(void)
+{
+    DaWrite(DaVal * 51);
 }
 void GetTime(void)
 {
@@ -113,7 +118,10 @@ void UartProc(void)
         UartBufIndex = 0;
     }
 }
-
+void Tp(void)
+{
+    Temperx10 = ReadTemp() * 10;
+}
 typedef struct
 {
     void (*TaskFunc)(void);
@@ -124,8 +132,10 @@ TaskType TaskList[] ={
     {LedProc,10,0},
     {GetTime,300,0},
     {KeyProc,20,0},
-    {ADDA,160,0},
+    {AD,160,0},
+    {DA,160,0},
     {UartProc,10,0},
+    {Tp,200,0},
     {SegProc,200,0}
 };
 void TaskListInit()
@@ -153,7 +163,7 @@ void main()
 	Timer0_Init();
     Timer1_Init();
     Uart1_Init();
-    printf("%u",(int)chh);
+    ModeInit();
     while(1)
     {
         TaskRun();

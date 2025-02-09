@@ -1,0 +1,12 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\ds1302.obj",
+".\Objects\iic.obj",
+".\Objects\Key.obj",
+".\Objects\Led.obj",
+".\Objects\onewire.obj",
+".\Objects\Seg.obj",
+".\Objects\uart.obj",
+".\Objects\ul.obj" 
+TO ".\Objects\Project" 
+PRINT(".\Listings\Project.m51") RAMSIZE(256) 
